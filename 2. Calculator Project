@@ -1,4 +1,5 @@
-# The code below creates an interactive calculator which can perform addition, subtraction, multiplication, and subtraction
+# The code below creates an interactive calculator which can perform addition, subtraction, multiplication, and subtraction.
+# This project was completed using Jupyter Notebooks
 # Methods used: created fuctions, used input fuctions, if and while statements, a break, and upper and lower fuctions. Converted to float type to allow decimals in calculation.
 
 
