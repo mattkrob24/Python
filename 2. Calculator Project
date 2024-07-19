@@ -1,0 +1,50 @@
+# The code below creates an interactive calculator which can perform addition, subtraction, multiplication, and subtraction
+# Methods used: created fuctions, used input fuctions, if and while statements, a break, and upper and lower fuctions. Converted to float type to allow decimals in calculation.
+
+
+def add(x,y):
+    return x + y
+
+def subtract(x,y):
+    return x - y
+
+def multiply(x,y):
+    return x * y
+
+def divide(x,y):
+    return x / y
+
+
+
+print("Enter 'A' for Addition.")
+print("Enter 'S' for Subtraction.")
+print("Enter 'M' for Multiplication.")
+print("Enter 'D' for Division.")
+
+
+while True:
+    choice = input('Enter Choice: (A,S,M,D): ')
+    
+    if choice.upper() in ('A','ADD','ADDITION','S','SUB','SUBTRACT','M','MULT','MULTIPLY','MULTIPLICATION','D','DIV','DIVIDE','DIVISION'):
+        num1 = float(input('Enter first number: '))
+        num2 = float(input('Enter second number: '))
+    
+        if choice.upper() in ('A','ADD','ADDITION'):
+            print(num1, '+', num2, '=', add(num1,num2))
+    
+        elif choice.upper() in ('S','SUB','SUBTRACT'):
+            print(num1, '-', num2, '=', subtract(num1,num2))
+    
+        elif choice.upper() in ('M','MULT','MULTIPLY','MULTIPLICATION'):
+            print(num1, '*', num2, '=', multiply(num1,num2))
+    
+        elif choice.upper() in ('D','DIV','DIVIDE','DIVISION'):
+            print(num1, '/', num2, '=', divide(num1,num2))
+    
+    else:
+        print('Please input a correct choice.')
+
+    next_calculation = input('Want to do another calculation? (yes/no?): ')
+    if next_calculation.lower() in ('no','n','nope'):
+        break
+        
