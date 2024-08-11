@@ -1,0 +1,173 @@
+# This project was completed to scrape data from Coin Market Cap using Python in Jupyter Notebooks
+
+# This code pulls the name of the cryptocurrency and price using the HTML from the site
+# The scraped data has been automated to create a CSV on my computer and daily append each days new data to the existing file
+
+# Please note the class on the website may changed over time as website is maintained
+
+
+# SKIP TO BOTTOM FOR FINAL CODE WITH AUTOMATION
+
+
+
+# THE PROCESS --------------------------------------------------------------------------------------------------------------------------------
+
+from bs4 import BeautifulSoup
+import requests
+
+url = 'https://coinmarketcap.com/currencies/bitcoin/'
+page = requests.get(url)
+soup = BeautifulSoup(page.text, 'html')
+print(soup)
+
+
+soup.find('span', class_ = 'sc-65e7f566-0 lsTl')
+crypto_name = soup.find('span', class_ = 'sc-65e7f566-0 lsTl').text
+print(crypto_name)
+
+fixed_crypto_name = crypto_name.replace('price', '')
+print(fixed_crypto_name)
+
+
+soup.find('span', class_ = 'sc-65e7f566-0 clvjgF base-text')
+crypto_price = soup.find('span', class_ = 'sc-65e7f566-0 clvjgF base-text').text
+print(crypto_price)
+
+final_price = crypto_price.replace('$','')
+final_price
+
+import pandas as pd
+from datetime import datetime
+
+date_time = datetime.now()
+print(date_time)
+
+dict = {'Crypto Name': fixed_crypto_name, 
+        'Price': final_price,
+        'TimeStamp': date_time}
+
+df = pd.DataFrame([dict])
+df
+
+df.to_csv(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/Auto_Crypto_Scraper.csv')
+
+import os
+
+if os.path.exists(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/Auto_Crypto_Scraper.csv'):
+    df.to_csv(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/Auto_Crypto_Scraper.csv', mode = 'a', header = False)
+else:
+    df.to_csv(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/Auto_Crypto_Scraper.csv')
+
+
+
+
+
+
+
+# PUTTING IT TOGETHER WITH STEPS ---------------------------------------------------------------------------------------------------------
+
+# Import modules 
+from bs4 import BeautifulSoup
+import requests
+import pandas as pd
+from datetime import datetime
+import os
+
+# Scrape HTML
+url = 'https://coinmarketcap.com/currencies/bitcoin/'
+
+page = requests.get(url)
+
+soup = BeautifulSoup(page.text, 'html')
+
+
+# Get crypto name
+crypto_name = soup.find('span', class_ = 'sc-65e7f566-0 lsTl').text
+fixed_crypto_name = crypto_name.replace('price', '')
+
+# Get price
+soup.find('span', class_ = 'sc-65e7f566-0 clvjgF base-text')
+crypto_price = soup.find('span', class_ = 'sc-65e7f566-0 clvjgF base-text').text
+final_price = crypto_price.replace('$','')
+
+# Get datetime
+date_time = datetime.now()
+
+
+# Create dataframe
+dict = {'Crypto Name': fixed_crypto_name, 
+        'Price': final_price,
+        'TimeStamp': date_time}
+
+df = pd.DataFrame([dict])
+
+
+# Export to file or append
+if os.path.exists(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/Auto_Crypto_Scraper.csv'):
+    df.to_csv(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/Auto_Crypto_Scraper.csv', mode = 'a', header = False)
+else:
+    df.to_csv(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/Auto_Crypto_Scraper.csv')
+
+
+
+
+
+
+
+FINAL CODE + AUTOMATION ----------------------------------------------------------------------------------------------------------------------
+
+# Import Modules
+
+from bs4 import BeautifulSoup
+import requests
+import pandas as pd
+from datetime import datetime
+import os
+import time
+
+
+# Create function for automation
+
+def automated_crypto_pull():
+    # Scrape HTML
+    url = 'https://coinmarketcap.com/currencies/bitcoin/'
+    
+    page = requests.get(url)
+    
+    soup = BeautifulSoup(page.text, 'html')
+    
+    
+    # Get crypto name
+    crypto_name = soup.find('span', class_ = 'sc-65e7f566-0 lsTl').text
+    fixed_crypto_name = crypto_name.replace('price', '')
+    
+    # Get price
+    soup.find('span', class_ = 'sc-65e7f566-0 clvjgF base-text')
+    crypto_price = soup.find('span', class_ = 'sc-65e7f566-0 clvjgF base-text').text
+    final_price = crypto_price.replace('$','')
+    
+    # Get datetime
+    date_time = datetime.now()
+    
+    
+    # Create dataframe
+    dict = {'Crypto Name': fixed_crypto_name, 
+            'Price': final_price,
+            'TimeStamp': date_time}
+    
+    df = pd.DataFrame([dict])
+    
+    
+    # Export to file or append
+    if os.path.exists(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/Auto_Crypto_Scraper.csv'):
+        df.to_csv(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/Auto_Crypto_Scraper.csv', mode = 'a', header = False, index = False)
+    else:
+        df.to_csv(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/Auto_Crypto_Scraper.csv', index = False)
+    print(df)
+
+
+# Run function
+
+while True:
+    automated_crypto_pull()
+    time.sleep(3600)
