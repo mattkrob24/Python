@@ -1,1 +1,103 @@
+# This project was completed to scrape data from Worldometers using Python in Jupyter Notebooks
+# Scraped data was then exported to a CSV file on my computer
+
+
+# THE PROCESS --------------------------------------------------------------------------------------------------------------------------------
+
+from bs4 import BeautifulSoup
+import requests
+
+
+url = 'https://www.worldometers.info/world-population/population-by-country/'
+
+page = requests.get(url)
+
+soup = BeautifulSoup(page.text, 'html')
+print(soup)
+
+
+table = soup.find('table')
+
+table.find_all('th')
+
+world_columns = table.find_all('th')
+
+world_column_titles = [columns.text for columns in world_columns]
+print(world_column_titles)
+
+
+import pandas as pd
+
+df = pd.DataFrame(columns = world_column_titles)
+df
+
+table.find_all('tr')
+
+world_rows = table.find_all('tr')
+
+for row in world_rows:
+    row_data = row.find_all('td')
+    individual_row_data = [data.text for data in row_data]
+
+print(individual_row_data)
+
+
+for row in world_rows[1:]:
+    row_data = row.find_all('td')
+    individual_row_data = [data.text for data in row_data]
+
+    length = len(df)
+    df.loc[length] = individual_row_data
+
+df.to_csv(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/World_Population_Scraped.csv', index = False)
+
+
+
+# FINAL CODE --------------------------------------------------------------------------------------------------------------------------------
+
+# Import modules
+from bs4 import BeautifulSoup
+import requests
+import pandas as pd
+
+
+# Scrape HTML
+url = 'https://www.worldometers.info/world-population/population-by-country/'
+page = requests.get(url)
+soup = BeautifulSoup(page.text, 'html')
+
+table = soup.find('table')
+
+
+# Find column headers
+table.find_all('th')
+
+world_columns = table.find_all('th')
+
+world_column_titles = [columns.text for columns in world_columns]
+
+
+# Create DataFrame with headers
+df = pd.DataFrame(columns = world_column_titles)
+
+
+# Find Row Data
+table.find_all('tr')
+
+world_rows = table.find_all('tr')
+
+
+# Clean Row Data and add DateFrame
+for row in world_rows[1:]:
+    row_data = row.find_all('td')
+    individual_row_data = [data.text for data in row_data]
+
+    length = len(df)
+    df.loc[length] = individual_row_data
+
+df
+
+
+# Export to csv
+df.to_csv(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/World_Population_Scraped.csv', index = False)
 
