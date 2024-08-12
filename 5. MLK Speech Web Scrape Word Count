@@ -1,0 +1,90 @@
+# This project was completed to scrape data from Martin Luther King Jr's Speech (on AnalyticTech) using Python in Jupyter Notebooks
+
+# This code pulls the speech using the HTML from the site
+# The scraped data was then split into individual words and counted in a DataFrame in Pandas and then exported to a CSV
+
+# Python Skills Used: Regular Expressions, Web Scraping, Pandas, Data Cleaning & Manipulation, File Handling
+
+# SKIP TO BOTTOM FOR FINAL CODE
+
+
+
+# THE PROCESS IN JUPYTER NOTEBOOKS -------------------------------------------------------------------------------------------------------------
+
+from bs4 import BeautifulSoup
+import requests
+
+url = 'http://www.analytictech.com/mb021/mlk.htm'
+
+page = requests.get(url)
+
+soup = BeautifulSoup(page.text, 'html')
+print(soup)
+
+mlkj_speech = soup.find_all('p')
+mlkj_speech
+
+speech_combined = [p.text for p in mlkj_speech]
+print(speech_combined)
+
+type(speech_combined)
+
+#converts it to a string from a list
+string_speech = ' '.join(speech_combined)
+string_speech
+
+string_speech_cleaned = string_speech.replace('\r\n',' ')
+string_speech_cleaned
+
+
+import re
+
+speech_no_punt = re.sub(r'[^\w\s]', '', string_speech_cleaned)
+print(speech_no_punt)
+
+speech_lower = speech_no_punt.lower()
+
+speech_broken_out = re.split(r'\s+', speech_lower)
+speech_broken_out
+
+import pandas as pd
+
+df = pd.DataFrame(speech_broken_out).value_counts()
+df
+
+df.to_csv(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/MLKJ_Speech_Counts.csv', header = ['Count'], index_label = 'Word')
+
+
+
+
+
+# FINAL CODE WITH STEPS ----------------------------------------------------------------------------------------------------------------------
+
+# Import All Needed Modules
+from bs4 import BeautifulSoup
+import requests
+import re
+import pandas as pd
+
+# Scrape HTML 
+url = 'http://www.analytictech.com/mb021/mlk.htm'
+page = requests.get(url)
+soup = BeautifulSoup(page.text, 'html')
+
+# Get speech from body of HTML
+mlkj_speech = soup.find_all('p')
+speech_combined = [p.text for p in mlkj_speech]
+type(speech_combined)
+
+# Converts it from a list to a string
+string_speech = ' '.join(speech_combined)
+
+# Data Cleaning
+string_speech_cleaned = string_speech.replace('\r\n',' ')
+speech_no_punt = re.sub(r'[^\w\s]', '', string_speech_cleaned)
+speech_broken_out = re.split(r'\s+', speech_lower)
+
+# Create DataFrame and then Export to CSV
+df = pd.DataFrame(speech_broken_out).value_counts()
+df.to_csv(r'/Users/matthewrobinson/Desktop/Coding and Certificates/Analyst Builder/Python Course/MLKJ_Speech_Counts.csv', header = ['Count'], index_label = 'Word')
+
